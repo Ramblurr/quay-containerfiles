@@ -1,17 +1,17 @@
 FROM registry.fedoraproject.org/fedora:34 as unzip
 
-# From https://www.consulproject.io/downloads
-ENV CONSUL_VERSION="1.10.2"
-ENV CONSUL_SHA256="1dd31062da703d9f778145c38313f4e48cb498aa254720636ff7935b6a03dceb  consul_1.10.2_linux_amd64.zip"
-
 RUN dnf -y update && \
     dnf -y install unzip && \
     dnf clean all
 
-RUN curl -O "https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip"
-RUN echo "${CONSUL_SHA256}" | sha256sum --check
-RUN unzip consul_${CONSUL_VERSION}_linux_amd64.zip
+# From https://www.vaultproject.io/downloads
+ENV VAULT_VERSION="1.8.2"
+ENV VAULT_SHA256="d74724d6cc22bf1e1c7c519009b0176809acf6f1c20ee56107de0cab54cd8463  vault_1.8.2_linux_amd64.zip"
+
+RUN curl -O "https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip"
+RUN echo "${VAULT_SHA256}" | sha256sum --check
+RUN unzip vault_${VAULT_VERSION}_linux_amd64.zip
 
 FROM scratch
-COPY --from=unzip /consul .
-CMD ["/consul"]
+COPY --from=unzip /vault .
+CMD ["/vault"]
